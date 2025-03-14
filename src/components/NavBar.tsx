@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { onLogout } from "@/lib/redux/features/authSlice";
+import { deleteCookie } from "cookies-next";
 
 export default function NavBar() {
   const auth = useAppSelector((state) => state.auth);
@@ -17,7 +18,12 @@ export default function NavBar() {
       <div>
         {auth.isLogin ? (
           <div>
-            <button onClick={() => {dispatch(onLogout())}}>SIGN OUT</button>
+            <button 
+              onClick={() => {
+                dispatch(onLogout());
+                deleteCookie("access_token");
+              }}
+            >SIGN OUT</button>
           </div>
         ) : (
           <div className="flex gap-4">

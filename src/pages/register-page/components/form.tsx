@@ -5,6 +5,7 @@ import axios from "axios";
 import registerSchema from "./schema";
 import IRegister from "./type";
 import { useRouter } from "next/navigation";
+import { error } from "console";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -17,7 +18,13 @@ export default function RegisterForm() {
 
   const register = async(values: IRegister) => {
     try {
-      await axios.post("http://localhost:7001/user", values);
+      const { data } = await axios.get(
+        `http://localhost:7001/user?email=${values.email}`
+      );
+
+      if (data.length > 0) throw new Error("E-Mail sudah Terdaftar");
+
+      await axios.post(`http://localhost:7001/user`, values);
 
       alert("Registrasi Sukses")
       router.push("/login")

@@ -7,6 +7,8 @@ import ILogin from "./type";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { onLogin } from "@/lib/redux/features/authSlice";
+import sign from "jwt-encode"
+import { setCookie } from "cookies-next";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -24,15 +26,21 @@ export default function LoginForm() {
     console.log(data)
 
     if (data.length === 0) throw new Error("E-Mail atau Password salah");
-    dispatch(
-      onLogin({
+
+    const stateUser = {
       user: {
         email: data[0].email,
         firstname: data[0].firstname,
         lastname: data[0].lastname,
-      },
+    },
       isLogin: true
-    }))
+    };
+
+    const token = sign(stateUser, "test")
+  
+    setCookie("access_token", token)
+    dispatch(onLogin(stateUser))
+
       alert("Login Sukses")
       router.push("/")
 
@@ -65,7 +73,7 @@ export default function LoginForm() {
                   values={values.email}
                   className="border border-black rounded-[6px] p-1 w-[300px]"
                 />
-                {touched.email && errors.email && 
+                {touched.email && errors.email &&
                   <div className="text-red-500">
                     {errors.email}
                   </div>}

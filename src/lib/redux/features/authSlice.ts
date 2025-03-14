@@ -6,7 +6,7 @@ interface IUser {
   lastname: string;
 }
 
-interface IAuth {
+export interface IAuth {
   user: IUser;
   isLogin: boolean;
 }
@@ -17,7 +17,7 @@ const initialState: IAuth = {
     firstname: "",
     lastname: ""
   },
-  isLogin: true
+  isLogin: false
 } 
 
 export const authSlice = createSlice({
